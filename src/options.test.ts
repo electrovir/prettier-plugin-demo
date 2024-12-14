@@ -1,5 +1,5 @@
-import {itCases} from '@augment-vir/chai';
-import {MultilineArrayOptions, optionPropertyValidators} from './options';
+import {describe, itCases} from '@augment-vir/test';
+import {MultilineArrayOptions, optionPropertyValidators} from './options.js';
 
 describe('optionPropertyValidators', () => {
     itCases(
@@ -7,30 +7,6 @@ describe('optionPropertyValidators', () => {
             return optionPropertyValidators[optionType](input);
         },
         [
-            {
-                it: 'accepts true for multilineFunctionArguments',
-                inputs: [
-                    'multilineFunctionArguments',
-                    true,
-                ],
-                expect: true,
-            },
-            {
-                it: 'accepts false for multilineFunctionArguments',
-                inputs: [
-                    'multilineFunctionArguments',
-                    false,
-                ],
-                expect: true,
-            },
-            {
-                it: 'rejects numbers for multilineFunctionArguments',
-                inputs: [
-                    'multilineFunctionArguments',
-                    42,
-                ],
-                expect: false,
-            },
             {
                 it: 'allows -1 for multilineArraysWrapThreshold',
                 inputs: [

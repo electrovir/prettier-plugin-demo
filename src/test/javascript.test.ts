@@ -1,7 +1,7 @@
-import {describe} from 'mocha';
-import {capitalizeFirst} from '../augments/string';
-import {nextLinePatternComment, nextWrapThresholdComment} from '../options';
-import {MultilineArrayTest, runTests} from './run-tests';
+import {describe} from '@augment-vir/test';
+import {capitalizeFirst} from '../augments/string.js';
+import {nextLinePatternComment, nextWrapThresholdComment} from '../options.js';
+import {MultilineArrayTest, runTests} from './run-tests.mock.js';
 
 const javascriptTests: MultilineArrayTest[] = [
     {
@@ -16,182 +16,6 @@ const javascriptTests: MultilineArrayTest[] = [
                 return inputKey in inputObject;
             }
         `,
-    },
-    {
-        it: 'long args that wrap already',
-        code: `
-            doTheThing('super long argument to force some wrapping', 'super long argument to force some wrapping', 'super long argument to force some wrapping');
-        `,
-        expect: `
-            doTheThing(
-                'super long argument to force some wrapping',
-                'super long argument to force some wrapping',
-                'super long argument to force some wrapping',
-            );
-        `,
-        options: {
-            multilineFunctionArguments: true,
-        },
-    },
-    {
-        // caught
-        it: 'arguments in function call',
-        code: `
-            doTheThing('a123', 'b123', 'c123');
-        `,
-        expect: `
-            doTheThing(
-                'a123',
-                'b123',
-                'c123',
-            );
-        `,
-        options: {
-            multilineFunctionArguments: true,
-        },
-        exclude: true,
-    },
-    {
-        // caught
-        it: 'assigned function call',
-        code: `
-            const output = doThing('a9', 'b999');
-        `,
-        expect: `
-        const output = doThing(
-                'a9',
-                'b999',
-            );
-        `,
-        options: {
-            multilineFunctionArguments: true,
-        },
-        exclude: true,
-    },
-    {
-        it: 'require call',
-        code: `
-            const output = require('path/to/thing');
-        `,
-        expect: `
-            const output = require('path/to/thing');
-        `,
-        options: {
-            multilineFunctionArguments: true,
-        },
-    },
-    {
-        it: 'single arg arrow function',
-        code: `
-            const stuff = process.argv.some((argP) => argO.match(/\.tsq?$/));
-        `,
-        expect: `
-            const stuff = process.argv.some((argP) => argO.match(/\.tsq?$/));
-        `,
-        options: {
-            multilineFunctionArguments: true,
-        },
-    },
-    {
-        it: 'multi arg arrow function with call in callback',
-        code: `
-            const stuff = process.argv.some((argB, indexB) => argC.match(/\.tsg?$/));
-        `,
-        expect: `
-            const stuff = process.argv.some(
-                (
-                    argB,
-                    indexB,
-                ) => argC.match(/\.tsg?$/)
-            );
-        `,
-        exclude: true,
-        options: {
-            multilineFunctionArguments: true,
-        },
-    },
-    {
-        it: 'multi arg arrow function',
-        exclude: true,
-        code: `
-            const stuff = process.argv.some((arg2, index3) => arg1);
-        `,
-        expect: `
-            const stuff = process.argv.some(
-                (
-                    arg2,
-                    index3,
-                ) => arg1,
-            );
-        `,
-        options: {
-            multilineFunctionArguments: true,
-        },
-    },
-    {
-        it: 'tons of args in arrow function',
-        code: `
-            const stuff = process.argv.some((reallyReallyReallyReallyReallyReallyReallyLong, reallyReallyReallyReallyReallyReallyReallyLong, reallyReallyReallyReallyReallyReallyReallyLong) => arg.match(/\.tsx?$/));
-        `,
-        expect: `
-            const stuff = process.argv.some(
-                (
-                    reallyReallyReallyReallyReallyReallyReallyLong,
-                    reallyReallyReallyReallyReallyReallyReallyLong,
-                    reallyReallyReallyReallyReallyReallyReallyLong,
-                ) => arg.match(/\.tsx?$/),
-            );
-        `,
-        options: {
-            multilineFunctionArguments: true,
-        },
-    },
-    {
-        it: 'arguments in new constructor call',
-        code: `
-            new doTheThing('aq', 'bq', 'cq');
-        `,
-        expect: `
-            new doTheThing(
-                'aq',
-                'bq',
-                'cq',
-            );
-        `,
-        options: {
-            multilineFunctionArguments: true,
-        },
-        exclude: true,
-    },
-    {
-        it: 'arguments in function definition',
-        code: `
-            function doTheThing(a1, b2, c3) {};
-        `,
-        expect: `
-            function doTheThing(
-                a1,
-                b2,
-                c3,
-            ) {}
-        `,
-        options: {
-            multilineFunctionArguments: true,
-        },
-        exclude: true,
-    },
-    {
-        it: 'arguments in function definition no wrap when below threshold',
-        code: `
-            function doTheThing(aa, bb, cc) {};
-        `,
-        expect: `
-            function doTheThing(aa, bb, cc) {}
-        `,
-        options: {
-            multilineFunctionArguments: true,
-            multilineArraysWrapThreshold: 10,
-        },
     },
     {
         it: 'basic wrap threshold comment',
@@ -905,14 +729,12 @@ const javascriptTests: MultilineArrayTest[] = [
     },
     {
         it: 'original parser with single line object assignment',
-        // prettier-ignore
         code: `
             const myVar = {a: 'where', b: 'everywhere'};
         `,
     },
     {
         it: 'original parser with multi-line object assignment',
-        // prettier-ignore
         code: `
             const myVar = {
                 a: 'where',

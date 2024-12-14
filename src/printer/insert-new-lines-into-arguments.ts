@@ -1,9 +1,9 @@
 import {Doc, doc} from 'prettier';
-import {isDocCommand, stringifyDoc} from '../augments/doc';
-import {walkDoc} from './child-docs';
+import {isDocCommand, stringifyDoc} from '../augments/doc.js';
+import {walkDoc} from './child-docs.js';
 
-const nestingSyntaxOpen = '[{(`' as const;
-const nestingSyntaxClose = ']})`' as const;
+const nestingSyntaxOpen = '[{(`';
+const nestingSyntaxClose = ']})`';
 
 const found = 'Found "(" but';
 
@@ -81,7 +81,7 @@ export function insertLinesIntoArguments(
             }
 
             if (!Array.isArray(findingSiblingChildren)) {
-                throw new Error(`${found} its sibling's children were not in an array.`);
+                throw new TypeError(`${found} its sibling's children were not in an array.`);
             }
             const foundSiblingChildren = findingSiblingChildren;
 

@@ -1,12 +1,12 @@
-import {capitalizeFirst} from '../augments/string';
+import {capitalizeFirst} from '../augments/string.js';
 import {
     nextLinePatternComment,
     nextWrapThresholdComment,
     resetComment,
     setLinePatternComment,
     setWrapThresholdComment,
-} from '../options';
-import {MultilineArrayTest} from './run-tests';
+} from '../options.js';
+import {MultilineArrayTest} from './run-tests.mock.js';
 
 export const typescriptTests: MultilineArrayTest[] = [
     {
@@ -45,67 +45,6 @@ export const typescriptTests: MultilineArrayTest[] = [
         options: {
             multilineArraysWrapThreshold: 0,
             filepath: undefined,
-        },
-    },
-    {
-        it: 'should not wrap a function call with just one argument',
-        code: `
-            doThing('what');
-        `,
-        options: {
-            multilineFunctionArguments: true,
-        },
-    },
-    {
-        it: 'should not wrap inner objects',
-        code: `
-            console.info({stdout: output.results.stdout});
-        `,
-        options: {
-            multilineFunctionArguments: true,
-        },
-    },
-    {
-        it: 'should wrap a function call with just two arguments',
-        code: `
-            doThing('what', 'who');
-        `,
-        expect: `
-            doThing(
-                'what',
-                'who',
-            );
-        `,
-        options: {
-            multilineFunctionArguments: true,
-        },
-        exclude: true,
-    },
-    {
-        it: 'should not wrap a function definition with just one argument',
-        code: `
-            function mapToActualPaths(
-                paths: Readonly<string[]>,
-            ): Readonly<string[]> {}
-        `,
-        options: {
-            multilineFunctionArguments: true,
-        },
-    },
-    {
-        it: 'works with a whole file of code that was failing',
-        code: `
-            import {assert} from 'chai';
-            import {basename} from 'path';
-            
-            describe(basename(__filename), () => {
-                it('should have a valid test', () => {
-                    assert.isTrue(true);
-                });
-            });
-        `,
-        options: {
-            multilineFunctionArguments: true,
         },
     },
     {
@@ -986,18 +925,6 @@ export const typescriptTests: MultilineArrayTest[] = [
         },
     },
     {
-        it: 'does wrap an empty array if threshold is 0',
-        code: `
-            const thing = [
-            ];
-        `,
-        options: {
-            multilineArraysWrapThreshold: 0,
-        },
-        // I don't think anyone actually wants this
-        exclude: true,
-    },
-    {
         it: 'does wrap an empty array if it contains comments',
         code: `
             const thing = [
@@ -1027,99 +954,6 @@ export const typescriptTests: MultilineArrayTest[] = [
                 },
             });
         `,
-    },
-    {
-        it: 'arguments in function call',
-        code: `
-            doTheThing('a', 'b', 'c');
-        `,
-        expect: `
-            doTheThing(
-                'a',
-                'b',
-                'c',
-            );
-        `,
-        options: {
-            multilineFunctionArguments: true,
-        },
-        exclude: true,
-    },
-    {
-        it: 'single arg arrow function',
-        code: `
-            const stuff = process.argv.some((arg) => arg.match(/\.tsx?$/));
-        `,
-        expect: `
-            const stuff = process.argv.some((arg) => arg.match(/\.tsx?$/));
-        `,
-        options: {
-            multilineFunctionArguments: true,
-        },
-    },
-    // {
-    //     name: 'multi arg arrow function',
-    //     code: `
-    //         const stuff = process.argv.some((arg: something, index: anotherThing) => arg.match(/\.tsx?$/));
-    //     `,
-    //     expected: `
-    //         const stuff = process.argv.some(
-    //             (
-    //                 arg: something,
-    //                 index: anotherThing,
-    //             ) => arg.match(/\.tsx?$/)
-    //         );
-    //     `,
-    //     options: {
-    //         multilineFunctionArguments: true,
-    //     },
-    // },
-    {
-        it: 'arguments in new constructor call',
-        code: `
-            new doTheThing('a', 'b', 'c');
-        `,
-        expect: `
-            new doTheThing(
-                'a',
-                'b',
-                'c',
-            );
-        `,
-        options: {
-            multilineFunctionArguments: true,
-        },
-        exclude: true,
-    },
-    {
-        it: 'arguments in function definition',
-        code: `
-            function doTheThing(a: string, b: string, c: string) {};
-        `,
-        expect: `
-            function doTheThing(
-                a: string,
-                b: string,
-                c: string,
-            ) {}
-        `,
-        options: {
-            multilineFunctionArguments: true,
-        },
-        exclude: true,
-    },
-    {
-        it: 'arguments in function definition no wrap when below threshold',
-        code: `
-            function doTheThing(a: string, b: string, c: string) {};
-        `,
-        expect: `
-            function doTheThing(a: string, b: string, c: string) {}
-        `,
-        options: {
-            multilineFunctionArguments: true,
-            multilineArraysWrapThreshold: 10,
-        },
     },
     {
         it: 'config object',
@@ -1249,7 +1083,6 @@ export const typescriptTests: MultilineArrayTest[] = [
     },
     {
         it: 'no threshold set with multiple arrays, one having a trigger comment',
-        // prettier-ignore
         code: `
             const varNoLine = ['a', 'b'];
             const varOneNewLine = [
@@ -1268,7 +1101,6 @@ export const typescriptTests: MultilineArrayTest[] = [
             ];
 
         `,
-        // prettier-ignore
         expect: `
             const varNoLine = ['a', 'b'];
             const varOneNewLine = [

@@ -1,36 +1,16 @@
 {
     "compilerOptions": {
-        "alwaysStrict": true,
-        "baseUrl": ".",
-        "declaration": true,
-        "esModuleInterop": true,
-        "exactOptionalPropertyTypes": true,
-        "forceConsistentCasingInFileNames": true,
-        "module": "NodeNext",
-        "moduleResolution": "NodeNext",
-        "noImplicitAny": true,
-        "noImplicitOverride": true,
-        "noImplicitReturns": true,
-        "noImplicitThis": true,
-        "noUncheckedIndexedAccess": true,
-        "outDir": "dist",
-        "rootDir": "src",
-        "skipDefaultLibCheck": true,
-        "skipLibCheck": true,
-        "strict": true,
-        "target": "ES2021",
-        "useUnknownInCatchVariables": true
+        "outDir": "./dist/",
+        "rootDir": "./src/"
     },
     "exclude": [
-        "configs",
-        "dist",
-        "node_modules",
-        "separate-configs",
-        "test-files"
+        "./configs/",
+        "./coverage/",
+        "./dist-*/",
+        "./dist/",
+        "./node_modules/",
+        "./test-files/",
+        "src/all-files-for-code-coverage.test.ts"
     ],
-    "ts-node": {
-        "compilerOptions": {
-            "module": "CommonJS"
-        }
-    }
+    "extends": "@virmator/compile/configs/tsconfig.base.json"
 }

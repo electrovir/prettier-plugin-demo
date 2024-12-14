@@ -34,7 +34,7 @@ export function extractComments(node: any): Comment[] {
     if (!node || typeof node !== 'object') {
         return [];
     }
-    let comments: Comment[] = [];
+    const comments: Comment[] = [];
 
     if (Array.isArray(node)) {
         comments.push(...node.filter(isMaybeComment));

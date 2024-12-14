@@ -1,5 +1,5 @@
 import {BaseNode} from 'estree';
-import {extractTextBetweenRanges} from '../augments/array';
+import {extractTextBetweenRanges} from '../augments/array.js';
 
 export function containsTrailingComma(
     nodeLocation: BaseNode['loc'],
@@ -17,7 +17,7 @@ export function containsTrailingComma(
         if (!endLocation) {
             return false;
         }
-        let textPastLastElement = extractTextBetweenRanges(originalLines, {
+        const textPastLastElement = extractTextBetweenRanges(originalLines, {
             start: {
                 column: startLocation.column - 1,
                 line: startLocation.line - 1,

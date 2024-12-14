@@ -5,20 +5,32 @@ on:
         branches:
             - '**'
 
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
 jobs:
-    build:
+    tests:
         runs-on: ${{ matrix.os }}
         strategy:
             fail-fast: false
             matrix:
-                os: [ubuntu-latest, windows-latest, macos-latest]
+                os: [macos-latest, ubuntu-latest, windows-latest]
         steps:
-            - uses: actions/checkout@v3
-            - name: Use Node.js ${{ matrix.node-version }}
-              uses: actions/setup-node@v3
+            - uses: actions/checkout@v4.1.7
+            - uses: actions/setup-node@v4.0.3
               with:
                   node-version-file: '.nvmrc'
+            # handle NPM / Node.js repeatedly bricking their npm setup on Windows
+            # Note that this won't work if it uses --no-save
+            - if: runner.os == 'Windows'
+              shell: bash
+              run: |
+                  npm i npm
+            # format package.json is to account for the above `npm i npm` command
             - name: run test
+              shell: bash
               run: |
                   npm ci
+                  npm run format package.json
                   npm run test:all

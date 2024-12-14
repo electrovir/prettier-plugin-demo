@@ -1,8 +1,8 @@
 import {Node} from 'estree';
 import {AstPath, ParserOptions, Printer} from 'prettier';
-import {MultilineArrayOptions, envDebugKey, fillInOptions} from '../options';
-import {printWithMultilineArrays} from './insert-new-lines';
-import {getOriginalPrinter} from './original-printer';
+import {MultilineArrayOptions, envDebugKey, fillInOptions} from '../options.js';
+import {printWithMultilineArrays} from './insert-new-lines.js';
+import {getOriginalPrinter} from './original-printer.js';
 
 const debug = !!process.env[envDebugKey];
 
@@ -23,8 +23,8 @@ function wrapInOriginalPrinterCall<T extends string = string>(
                 ...(args.slice(2) as [any]),
             );
             if (
-                options.filepath?.endsWith('package.json') &&
-                options.plugins.find(
+                (options.filepath as string | undefined)?.endsWith('package.json') &&
+                options.plugins.some(
                     (plugin) =>
                         typeof plugin === 'object' &&
                         (plugin as {name?: string}).name?.includes('prettier-plugin-packagejson'),
@@ -33,8 +33,7 @@ function wrapInOriginalPrinterCall<T extends string = string>(
                 return originalOutput;
             }
 
-            const multilineOptions: MultilineArrayOptions & ParserOptions<any> =
-                fillInOptions(options);
+            const multilineOptions: MultilineArrayOptions & ParserOptions = fillInOptions(options);
 
             const multilinePrintedOutput = printWithMultilineArrays(
                 originalOutput,

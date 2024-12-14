@@ -1,4 +1,4 @@
-import {getObjectTypedKeys, PropertyValueType} from '@augment-vir/common';
+import {getObjectTypedKeys, Values} from '@augment-vir/common';
 import {SupportOptionType as PrettierOptionType} from 'prettier';
 
 export const envDebugKey = 'NEW_LINE_DEBUG';
@@ -29,14 +29,11 @@ export type MultilineArrayOptions = {
      */
     multilineArraysWrapThreshold: number;
     multilineArraysLinePattern: string;
-    multilineFunctionArguments: boolean;
 };
 
 export const optionHelp: Record<keyof MultilineArrayOptions, string> = {
     multilineArraysWrapThreshold: `A number indicating that all arrays should wrap when they have MORE than the specified number. Defaults to -1, indicating that no special wrapping enforcement will take place.\nExample: multilineArraysWrapThreshold: 3\nCan be overridden with a comment starting with ${nextWrapThresholdComment}.\nComment example: // ${nextWrapThresholdComment} 5`,
     multilineArraysLinePattern: `A string with a space separated list of numbers indicating how many elements should be on each line. The pattern repeats if an array is longer than the pattern. Defaults to an empty string. Any invalid numbers causes the whole pattern to revert to the default. This overrides the wrap threshold option.\nExample: elementsPerLinePattern: "3 2 1"\nCan be overridden with a comment starting with ${nextLinePatternComment}.\nComment example: // ${nextLinePatternComment} 3 2 1\nThis option overrides Prettier's default wrapping; multiple elements on one line will not be wrapped even if they don't fit within the column count.`,
-    multilineFunctionArguments:
-        'Applies all array wrapping logic to function argument lists as well. Experimental: does not work at all right now.',
 };
 
 export const optionPropertyValidators: {
@@ -59,15 +56,11 @@ export const optionPropertyValidators: {
             return !isNaN(numericSplit);
         });
     },
-    multilineFunctionArguments(input): input is boolean {
-        return typeof input === 'boolean';
-    },
 };
 
 export const defaultMultilineArrayOptions: MultilineArrayOptions = {
     multilineArraysWrapThreshold: -1,
     multilineArraysLinePattern: '',
-    multilineFunctionArguments: false,
 };
 
 const optionTypeToPrettierOptionTypeMapping: Record<string, PrettierOptionType> = {
@@ -77,7 +70,7 @@ const optionTypeToPrettierOptionTypeMapping: Record<string, PrettierOptionType> 
 } as const satisfies Record<'boolean' | 'number' | 'string', PrettierOptionType>;
 
 export function getPrettierOptionType(
-    input: PropertyValueType<MultilineArrayOptions>,
+    input: Values<MultilineArrayOptions>,
 ): PrettierOptionType {
     const mappedType = optionTypeToPrettierOptionTypeMapping[typeof input];
 

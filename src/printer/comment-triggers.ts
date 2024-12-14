@@ -10,8 +10,8 @@ import {
     untilNextWrapThresholdCommentRegExp,
     untilSetLinePatternCommentRegExp,
     untilSetWrapThresholdCommentRegExp,
-} from '../options';
-import {extractComments} from './comments';
+} from '../options.js';
+import {extractComments} from './comments.js';
 
 type LineNumberDetails<T> = {[lineNumber: number]: T};
 export type LineCounts = LineNumberDetails<number[]>;
@@ -58,7 +58,7 @@ function setCommentTriggers(rootNode: Node, debug: boolean): CommentTriggers {
 
     const internalCommentTriggers: InternalCommentTriggers = comments.reduce(
         (accum: InternalCommentTriggers, currentComment) => {
-            const commentText = currentComment.value?.replace(/\n/g, ' ');
+            const commentText = (currentComment.value as string | undefined)?.replace(/\n/g, ' ');
 
             if (!currentComment.loc) {
                 throw new Error(`Cannot read line location for comment ${currentComment.value}`);

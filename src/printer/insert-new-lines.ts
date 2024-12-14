@@ -1,21 +1,21 @@
-import {getObjectTypedKeys, PropertyValueType} from '@augment-vir/common';
+import {getObjectTypedKeys, Values, type AnyObject} from '@augment-vir/common';
 import {CallExpression} from 'estree';
 import {AstPath, Doc, doc, ParserOptions} from 'prettier';
-import {isDocCommand, stringifyDoc} from '../augments/doc';
-import {MultilineArrayOptions} from '../options';
-import {walkDoc} from './child-docs';
+import {isDocCommand, stringifyDoc} from '../augments/doc.js';
+import {MultilineArrayOptions} from '../options.js';
+import {walkDoc} from './child-docs.js';
 import {
     CommentTriggerWithEnding,
     getCommentTriggers,
     parseNextLineCounts,
-} from './comment-triggers';
-import {insertLinesIntoArguments} from './insert-new-lines-into-arguments';
-import {containsLeadingNewline} from './leading-new-line';
-import {isArgumentsLikeNode, isArrayLikeNode} from './supported-node-types';
-import {containsTrailingComma} from './trailing-comma';
+} from './comment-triggers.js';
+import {insertLinesIntoArguments} from './insert-new-lines-into-arguments.js';
+import {containsLeadingNewline} from './leading-new-line.js';
+import { isArrayLikeNode} from './supported-node-types.js';
+import {containsTrailingComma} from './trailing-comma.js';
 
-const nestingSyntaxOpen = '[{(`' as const;
-const nestingSyntaxClose = ']})`' as const;
+const nestingSyntaxOpen = '[{(`';
+const nestingSyntaxClose = ']})`';
 
 const found = 'Found "[" but:';
 
@@ -79,7 +79,7 @@ function insertLinesIntoArray(
                 console.info({indentContents});
             }
             if (!Array.isArray(indentContents)) {
-                throw new Error(`${found} indent didn't have array contents.`);
+                throw new TypeError(`${found} indent didn't have array contents.`);
             }
             if (indentContents.length < 2) {
                 if (debug) {
@@ -97,7 +97,7 @@ function insertLinesIntoArray(
                     undoAllMutations();
                     return false;
                 } else {
-                    throw new Error(`${found} first indent child was not a line.`);
+                    throw new TypeError(`${found} first indent child was not a line.`);
                 }
             }
             indentContents[0] = '';
@@ -170,7 +170,7 @@ function insertLinesIntoArray(
                                 throw new Error(`Found if-break without a parent`);
                             }
                             if (!Array.isArray(innerCurrentParentDoc)) {
-                                throw new Error(`if-break parent is not an array`);
+                                throw new TypeError(`if-break parent is not an array`);
                             }
                             if (commaChildIndex == undefined) {
                                 throw new Error(`if-break child index is undefined`);
@@ -192,7 +192,7 @@ function insertLinesIntoArray(
                             }
                             if (currentDoc && nestingSyntaxOpen.includes(currentDoc)) {
                                 if (!Array.isArray(innerCurrentParentDoc)) {
-                                    throw new Error(
+                                    throw new TypeError(
                                         `Found opening syntax but parent is not an array.`,
                                     );
                                 }
@@ -213,8 +213,7 @@ function insertLinesIntoArray(
                                     if (debug) {
                                         console.info({closingIndex, closingSibling});
                                     }
-                                    if (closingSibling) {
-                                        if (
+                                    if (closingSibling && 
                                             typeof closingSibling === 'object' &&
                                             !Array.isArray(closingSibling) &&
                                             closingSibling.type === 'line'
@@ -226,7 +225,6 @@ function insertLinesIntoArray(
                                             }
                                             finalLineBreakExists = true;
                                         }
-                                    }
                                 }
                                 return false;
                             } else if (currentDoc && nestingSyntaxClose.includes(currentDoc)) {
@@ -260,7 +258,7 @@ function insertLinesIntoArray(
                                         );
                                     }
                                     if (!Array.isArray(commaGrandParent.parent)) {
-                                        throw new Error(`Comma group grandparent is not an array.`);
+                                        throw new TypeError(`Comma group grandparent is not an array.`);
                                     }
                                     siblingIndex = commaGrandParent.childIndexInThisParent + 1;
                                     parentToMutate = commaGrandParent.parent;
@@ -377,8 +375,8 @@ function insertLinesIntoArray(
                     );
                 }
 
-                const closingBracketIndex: number = parentDoc.findIndex(
-                    (openingBracketSibling) => openingBracketSibling === ']',
+                const closingBracketIndex: number = parentDoc.indexOf(
+                    ']',
                 );
                 parentDoc.splice(closingBracketIndex, 0, doc.builders.hardlineWithoutBreakParent);
                 undoMutations.push(() => {
@@ -432,7 +430,7 @@ function insertLinesIntoArray(
 function getLatestSetValue<T extends object>(
     currentLine: number,
     triggers: CommentTriggerWithEnding<T>,
-): PropertyValueType<T> | undefined {
+): Values<T> | undefined {
     const relevantSetLineCountsKey: keyof T = getObjectTypedKeys(triggers)
         .sort()
         .reduce(
@@ -449,8 +447,8 @@ function getLatestSetValue<T extends object>(
             },
             '' as keyof T,
         );
-    const relevantSetLineCount: PropertyValueType<T> | undefined =
-        triggers[relevantSetLineCountsKey]?.data;
+    const relevantSetLineCount =
+        (triggers as AnyObject)[relevantSetLineCountsKey as any]?.data as Values<T> | undefined
 
     return relevantSetLineCount;
 }
@@ -458,7 +456,7 @@ function getLatestSetValue<T extends object>(
 export function printWithMultilineArrays(
     originalFormattedOutput: Doc,
     path: AstPath,
-    inputOptions: MultilineArrayOptions & ParserOptions<any>,
+    inputOptions: MultilineArrayOptions & ParserOptions,
     debug: boolean,
 ): Doc {
     const rootNode = path.stack[0];
@@ -471,8 +469,7 @@ export function printWithMultilineArrays(
 
     if (
         node &&
-        (isArrayLikeNode(node) ||
-            (inputOptions.multilineFunctionArguments && isArgumentsLikeNode(node)))
+        (isArrayLikeNode(node))
     ) {
         if (!node.loc) {
             throw new Error(`Could not find location of node ${node.type}`);
@@ -486,21 +483,13 @@ export function printWithMultilineArrays(
 
         const includesLeadingNewline = containsLeadingNewline(
             node.loc,
-            'arguments' in node
-                ? (node as CallExpression).arguments
-                : 'params' in node
-                  ? node.params
-                  : node.elements,
+            node.elements,
             splitOriginalText,
             debug,
         );
         const includesTrailingComma = containsTrailingComma(
             node.loc,
-            'arguments' in node
-                ? (node as CallExpression).arguments
-                : 'params' in node
-                  ? node.params
-                  : node.elements,
+            node.elements,
             splitOriginalText,
             debug,
         );
@@ -532,11 +521,7 @@ export function printWithMultilineArrays(
                 undefined || !!lineCounts.length;
 
         if (debug) {
-            if (isArgumentsLikeNode(node)) {
-                console.info(`======= Starting call to ${insertLinesIntoArguments.name}: =======`);
-            } else {
-                console.info(`======= Starting call to ${insertLinesIntoArray.name}: =======`);
-            }
+            console.info(`======= Starting call to ${insertLinesIntoArray.name}: =======`);
             console.info({options: {lineCounts, wrapThreshold}});
         }
 
@@ -552,16 +537,7 @@ export function printWithMultilineArrays(
         //     includesLeadingNewline,
         // });
 
-        const newDoc = isArgumentsLikeNode(node)
-            ? insertLinesIntoArguments(
-                  originalFormattedOutput,
-                  manualWrap,
-                  lineCounts,
-                  wrapThreshold,
-                  includesTrailingComma,
-                  debug,
-              )
-            : insertLinesIntoArray(
+        const newDoc = insertLinesIntoArray(
                   originalFormattedOutput,
                   manualWrap,
                   lineCounts,

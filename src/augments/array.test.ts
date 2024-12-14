@@ -1,10 +1,10 @@
-import {assert} from 'chai';
-import {describe, it} from 'mocha';
-import {extractTextBetweenRanges} from './array';
+import {assert} from '@augment-vir/assert';
+import {describe, it} from '@augment-vir/test';
+import {extractTextBetweenRanges} from './array.js';
 
 describe(extractTextBetweenRanges.name, () => {
     it('should extract text from multiple lines', () => {
-        assert.strictEqual(
+        assert.strictEquals(
             extractTextBetweenRanges(
                 [
                     'a b c d e f g h i j k l m n',
@@ -19,7 +19,7 @@ describe(extractTextBetweenRanges.name, () => {
     });
 
     it('should extract text from the same line', () => {
-        assert.strictEqual(
+        assert.strictEquals(
             extractTextBetweenRanges(['a b c d e f g h i j k l m n'], {
                 start: {line: 0, column: 4},
                 end: {line: 0, column: 7},

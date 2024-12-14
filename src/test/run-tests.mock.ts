@@ -1,9 +1,9 @@
-import {PartialAndNullable, removeColor} from '@augment-vir/common';
-import {assert} from 'chai';
-import {it} from 'mocha';
+import {assert} from '@augment-vir/assert';
+import {PartialWithNullable, removeColor} from '@augment-vir/common';
+import {it} from '@augment-vir/test';
 import {Options as PrettierOptions, format as prettierFormat} from 'prettier';
-import {MultilineArrayOptions} from '../options';
-import {repoConfig} from './prettier-config';
+import {MultilineArrayOptions} from '../options.js';
+import {repoConfig} from './prettier-config.js';
 
 async function runPrettierFormat(
     code: string,
@@ -15,20 +15,11 @@ async function runPrettierFormat(
         extension = extension.slice(1);
     }
 
-    const plugins = repoConfig.plugins?.map((entry) => {
-        if (entry === './dist/') {
-            return '.';
-        } else {
-            return entry;
-        }
-    }) ?? ['.'];
-
     const prettierOptions: PrettierOptions = {
         filepath: `blah.${extension}`,
         ...repoConfig,
         ...options,
         ...(parser ? {parser} : {}),
-        plugins,
     };
 
     return await prettierFormat(code, prettierOptions);
@@ -38,9 +29,9 @@ export type MultilineArrayTest = {
     it: string;
     code: string;
     expect?: string | undefined;
-    options?: (Partial<MultilineArrayOptions> & PartialAndNullable<PrettierOptions>) | undefined;
-    force?: true;
-    exclude?: true;
+    options?: (Partial<MultilineArrayOptions> & PartialWithNullable<PrettierOptions>) | undefined;
+    only?: true;
+    skip?: true;
     failureMessage?: string;
 };
 
@@ -67,7 +58,7 @@ export function runTests(extension: string, tests: MultilineArrayTest[], parser:
                     test.options,
                     parser,
                 );
-                assert.strictEqual(formatted, expected);
+                assert.strictEquals(formatted, expected);
                 if (formatted !== expected) {
                     allPassed = false;
                 }
@@ -78,17 +69,18 @@ export function runTests(extension: string, tests: MultilineArrayTest[], parser:
                     if (test.failureMessage !== strippedMessage) {
                         console.info({strippedMessage});
                     }
-                    assert.strictEqual(removeColor(strippedMessage), test.failureMessage);
+                    assert.strictEquals(removeColor(strippedMessage), test.failureMessage);
                 } else {
                     throw error;
                 }
             }
         }
 
-        if (test.force) {
+        if (test.only) {
             forced = true;
+            // eslint-disable-next-line sonarjs/no-exclusive-tests
             it.only(test.it, testCallback);
-        } else if (test.exclude) {
+        } else if (test.skip) {
             it.skip(test.it, testCallback);
         } else {
             it(test.it, testCallback);
@@ -96,9 +88,10 @@ export function runTests(extension: string, tests: MultilineArrayTest[], parser:
     });
 
     if (forced) {
+        // eslint-disable-next-line sonarjs/no-exclusive-tests
         it.only('forced tests should not remain in the code', () => {
             if (allPassed) {
-                assert.strictEqual(forced, false);
+                assert.strictEquals(forced, false);
             }
         });
     }

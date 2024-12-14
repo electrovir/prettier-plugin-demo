@@ -9,17 +9,17 @@ import {
     StringSupportOption,
     SupportOption,
 } from 'prettier';
-import {parsers as tsParsers} from 'prettier/parser-typescript';
+import {parsers as tsParsers} from 'prettier/plugins/typescript';
 import {parsers as babelParsers} from 'prettier/plugins/babel';
-import {MultilineArrayOptions, defaultMultilineArrayOptions, optionHelp} from './options';
-import {wrapParser} from './preprocessing';
-import {multilineArrayPrinter} from './printer/multiline-array-printer';
+import {MultilineArrayOptions, defaultMultilineArrayOptions, optionHelp} from './options.js';
+import {wrapParser} from './preprocessing.js';
+import {multilineArrayPrinter} from './printer/multiline-array-printer.js';
 
 // exports in case others want to utilize these
-export * from './options';
-export {pluginMarker} from './plugin-marker';
+export * from './options.js';
+export {pluginMarker} from './plugin-marker.js';
 
-export const parsers: Record<string, Parser<any>> = mapObjectValues(
+export const parsers: Record<string, Parser> = mapObjectValues(
     {
         typescript: tsParsers.typescript,
         babel: babelParsers.babel,
@@ -32,7 +32,7 @@ export const parsers: Record<string, Parser<any>> = mapObjectValues(
     },
 );
 
-const printers: Record<string, Printer<any>> = {
+const printers: Record<string, Printer> = {
     estree: multilineArrayPrinter,
     'estree-json': multilineArrayPrinter,
 };

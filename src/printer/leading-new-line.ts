@@ -1,5 +1,5 @@
 import {BaseNode} from 'estree';
-import {extractTextBetweenRanges} from '../augments/array';
+import {extractTextBetweenRanges} from '../augments/array.js';
 
 export function containsLeadingNewline(
     nodeLocation: BaseNode['loc'],
@@ -17,7 +17,7 @@ export function containsLeadingNewline(
         if (!endLocation) {
             return false;
         }
-        let textBeforeFirstElement = extractTextBetweenRanges(originalLines, {
+        const textBeforeFirstElement = extractTextBetweenRanges(originalLines, {
             start: {
                 column: startLocation.column - 1,
                 line: startLocation.line - 1,

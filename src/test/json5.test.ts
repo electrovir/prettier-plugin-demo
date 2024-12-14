@@ -1,6 +1,6 @@
-import {describe} from 'mocha';
-import {nextWrapThresholdComment} from '../options';
-import {MultilineArrayTest, runTests} from './run-tests';
+import {describe} from '@augment-vir/test';
+import {nextWrapThresholdComment} from '../options.js';
+import {MultilineArrayTest, runTests} from './run-tests.mock.js';
 
 const json5Tests: MultilineArrayTest[] = [
     {
