@@ -1,7 +1,7 @@
 import {getObjectTypedKeys, Values} from '@augment-vir/common';
 import {SupportOptionType as PrettierOptionType} from 'prettier';
 
-export const envDebugKey = 'NEW_LINE_DEBUG';
+export const envDebugKey = 'MULTILINE_DEBUG';
 
 export const nextLinePatternComment = 'prettier-multiline-arrays-next-line-pattern:';
 // all the text up until the comment trigger
@@ -69,9 +69,7 @@ const optionTypeToPrettierOptionTypeMapping: Record<string, PrettierOptionType> 
     string: 'string',
 } as const satisfies Record<'boolean' | 'number' | 'string', PrettierOptionType>;
 
-export function getPrettierOptionType(
-    input: Values<MultilineArrayOptions>,
-): PrettierOptionType {
+export function getPrettierOptionType(input: Values<MultilineArrayOptions>): PrettierOptionType {
     const mappedType = optionTypeToPrettierOptionTypeMapping[typeof input];
 
     if (mappedType) {

@@ -91,7 +91,7 @@ export function runTests(extension: string, tests: MultilineArrayTest[], parser:
         // eslint-disable-next-line sonarjs/no-exclusive-tests
         it.only('forced tests should not remain in the code', () => {
             if (allPassed) {
-                assert.strictEquals(forced, false);
+                assert.strictEquals(forced, false, 'Only tests are not allowed.');
             }
         });
     }

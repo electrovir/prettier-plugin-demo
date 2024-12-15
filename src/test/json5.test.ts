@@ -5,7 +5,6 @@ import {MultilineArrayTest, runTests} from './run-tests.mock.js';
 const json5Tests: MultilineArrayTest[] = [
     {
         it: 'basic JSON format',
-        // prettier-ignore
         code: `
             {
                 hello: 'there',
@@ -105,7 +104,6 @@ const json5Tests: MultilineArrayTest[] = [
     },
     {
         it: 'with object array element',
-        // prettier-ignore
         code: `
             {
                 hello: 'there',
@@ -133,7 +131,6 @@ const json5Tests: MultilineArrayTest[] = [
     },
     {
         it: 'with nested array',
-        // prettier-ignore
         code: `
             {
                 hello: 'there',
@@ -167,7 +164,6 @@ const json5Tests: MultilineArrayTest[] = [
     },
     {
         it: 'with multiple nested arrays',
-        // prettier-ignore
         code: `
             {
                 hello: 'there',

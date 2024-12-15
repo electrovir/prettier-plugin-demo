@@ -6,7 +6,6 @@ import {MultilineArrayTest, runTests} from './run-tests.mock.js';
 const javascriptTests: MultilineArrayTest[] = [
     {
         it: 'comment at end of argument list with multiline array parser',
-        // prettier-ignore
         code: `
             export function hasProperty(
                 inputObject,
@@ -110,7 +109,6 @@ const javascriptTests: MultilineArrayTest[] = [
     },
     {
         it: 'array elements with dots',
-        // prettier-ignore
         code: `
             parentDoc[childIndex] = [
                 doc.builders.hardlineWithoutBreakParent,
@@ -120,7 +118,6 @@ const javascriptTests: MultilineArrayTest[] = [
     },
     {
         it: 'single line comment with just one line count',
-        // prettier-ignore
         code: `
             // ${nextLinePatternComment} 2
             const originalArray = [
@@ -142,7 +139,6 @@ const javascriptTests: MultilineArrayTest[] = [
     },
     {
         it: 'single line comment with just one line wrapped',
-        // prettier-ignore
         code: `
             describe(filterMap.name, () => {
                 // ${nextLinePatternComment} 2
@@ -169,7 +165,6 @@ const javascriptTests: MultilineArrayTest[] = [
     {
         // caused a max call stack exceeded error once
         it: 'single object element with multiline template',
-        // prettier-ignore
         code: `
         
         
@@ -185,7 +180,6 @@ const javascriptTests: MultilineArrayTest[] = [
                 },
             ];
         `,
-        // prettier-ignore
         expect: `
             const stuff = [
                 {
@@ -198,7 +192,6 @@ const javascriptTests: MultilineArrayTest[] = [
     },
     {
         it: 'long function definition with multiline array parser',
-        // prettier-ignore
         code: `
             export async function selectFiles(
                 inputProperties = [
@@ -211,7 +204,6 @@ const javascriptTests: MultilineArrayTest[] = [
     },
     {
         it: 'comment after end of block with multiline array parser',
-        // prettier-ignore
         code: `
             if (thing) {
             }
@@ -222,7 +214,6 @@ const javascriptTests: MultilineArrayTest[] = [
     },
     {
         it: 'should still sort imports with multiline parser',
-        // prettier-ignore
         code: `
             import {notUsed} from 'blah';
             const thingie = [
@@ -239,11 +230,9 @@ const javascriptTests: MultilineArrayTest[] = [
     },
     {
         it: 'deep array call should include trailing comma still',
-        // prettier-ignore
         code: `
             expect(createArrayValidator(typeofValidators.boolean)([3, 4])).toBe(false);
         `,
-        // prettier-ignore
         expect: `
             expect(
                 createArrayValidator(typeofValidators.boolean)([
@@ -258,7 +247,6 @@ const javascriptTests: MultilineArrayTest[] = [
     },
     {
         it: 'not arrays but callbacks with multiline array parser',
-        // prettier-ignore
         code: `
             expose({
                 versions,
@@ -279,14 +267,12 @@ const javascriptTests: MultilineArrayTest[] = [
     },
     {
         it: 'function parameters',
-        // prettier-ignore
         code: `
             doTheThing('a', 'b', 'c');
         `,
     },
     {
         it: 'config object',
-        // prettier-ignore
         code: `
             const config = {
                 directories: {
@@ -304,7 +290,6 @@ const javascriptTests: MultilineArrayTest[] = [
     },
     {
         it: 'nested single-line objects on multiple lines',
-        // prettier-ignore
         code: `
             const nested = [
                 {success: true, filePath: ''},
@@ -315,11 +300,9 @@ const javascriptTests: MultilineArrayTest[] = [
     },
     {
         it: 'nested single-line objects all on one line',
-        // prettier-ignore
         code: `
             const nested = [{success: true, filePath: ''}, {success: false, error: 'hello there', filePath: ''}, {success: false, error: '', filePath: ''}];
         `,
-        // prettier-ignore
         expect: `
             const nested = [
                 {success: true, filePath: ''},
@@ -330,14 +313,12 @@ const javascriptTests: MultilineArrayTest[] = [
     },
     {
         it: 'nested multi-line objects',
-        // prettier-ignore
         code: `
             const nested = [{
                 success: true, filePath: ''}, {
                     success: false, error: 'hello there', filePath: ''}, {
                         success: false, error: '', filePath: ''}];
         `,
-        // prettier-ignore
         expect: `
             const nested = [
                 {
@@ -359,7 +340,6 @@ const javascriptTests: MultilineArrayTest[] = [
     },
     {
         it: 'multiple arrays and even one with a trigger comment',
-        // prettier-ignore
         code: `
             const varNoLine = ['a', 'b'];
             const varOneNewLine = [
@@ -378,7 +358,6 @@ const javascriptTests: MultilineArrayTest[] = [
             ];
 
         `,
-        // prettier-ignore
         expect: `
             const varNoLine = [
                 'a',
@@ -409,7 +388,6 @@ const javascriptTests: MultilineArrayTest[] = [
     },
     {
         it: 'no threshold set with multiple arrays, one having a trigger comment',
-        // prettier-ignore
         code: `
             const varNoLine = ['a', 'b'];
             const varOneNewLine = [
@@ -428,7 +406,6 @@ const javascriptTests: MultilineArrayTest[] = [
             ];
 
         `,
-        // prettier-ignore
         expect: `
             const varNoLine = ['a', 'b'];
             const varOneNewLine = [
@@ -450,7 +427,6 @@ const javascriptTests: MultilineArrayTest[] = [
     },
     {
         it: 'array with single line trigger comment',
-        // prettier-ignore
         code: `
         // ${nextLinePatternComment} 2 1 3
         const setNumberPerLine = [
@@ -465,9 +441,8 @@ const javascriptTests: MultilineArrayTest[] = [
             'j',
             'k',
         ];`,
-        // prettier-ignore
         expect: `
-            // ${(nextLinePatternComment)} 2 1 3
+            // ${nextLinePatternComment} 2 1 3
             const setNumberPerLine = [
                 'a', 'b',
                 'c',
@@ -480,7 +455,6 @@ const javascriptTests: MultilineArrayTest[] = [
     },
     {
         it: 'array with line trigger comment using commas',
-        // prettier-ignore
         code: `
         // ${nextLinePatternComment} 2, 1, 3
         const setNumberPerLine = [
@@ -495,7 +469,6 @@ const javascriptTests: MultilineArrayTest[] = [
             'j',
             'k',
         ];`,
-        // prettier-ignore
         expect: `
             // ${nextLinePatternComment} 2, 1, 3
             const setNumberPerLine = [
@@ -540,13 +513,11 @@ const javascriptTests: MultilineArrayTest[] = [
     },
     {
         it: 'nested array',
-        // prettier-ignore
         code: `
             const nestedArray = [
                 'q', 'r',
                 ['s', 't'],
             ];`,
-        // prettier-ignore
         expect: `
             const nestedArray = [
                 'q',
@@ -563,16 +534,13 @@ const javascriptTests: MultilineArrayTest[] = [
     },
     {
         it: 'empty array',
-        // prettier-ignore
         code: `
             const myVar1 = [];
         `,
     },
     {
         it: 'single element array on one line',
-        // prettier-ignore
         code: `let anotherThing = ['1 1'];`,
-        // prettier-ignore
         expect: `
             let anotherThing = [
                 '1 1',
@@ -584,11 +552,9 @@ const javascriptTests: MultilineArrayTest[] = [
     },
     {
         it: 'single element array on multiple lines',
-        // prettier-ignore
         code: `
             let anotherThing = ['1 1'
             ];`,
-        // prettier-ignore
         expect: `
             let anotherThing = [
                 '1 1',
@@ -600,7 +566,6 @@ const javascriptTests: MultilineArrayTest[] = [
     },
     {
         it: 'multiple different styled arrays all together',
-        // prettier-ignore
         code: `
             const myVar2 = [];
             let anotherThing = ['1 1'];
@@ -610,7 +575,6 @@ const javascriptTests: MultilineArrayTest[] = [
                 '2, 1',
                 '2, 2',
             ];`,
-        // prettier-ignore
         expect: `
             const myVar2 = [];
             let anotherThing = [
@@ -630,9 +594,7 @@ const javascriptTests: MultilineArrayTest[] = [
     },
     {
         it: 'single element string array with type definition',
-        // prettier-ignore
         code: `const myVar = ['hello'];`,
-        // prettier-ignore
         expect: `
             const myVar = [
                 'hello',
@@ -644,9 +606,7 @@ const javascriptTests: MultilineArrayTest[] = [
     },
     {
         it: 'double element string array with type definition',
-        // prettier-ignore
         code: `const myVar = ['hello', 'there'];`,
-        // prettier-ignore
         expect: `
             const myVar = [
                 'hello',
@@ -659,25 +619,21 @@ const javascriptTests: MultilineArrayTest[] = [
     },
     {
         it: 'non-array string assignment',
-        // prettier-ignore
         code: `
             const myVar=
             'hello';`,
-        // prettier-ignore
         expect: `
             const myVar = 'hello';
         `,
     },
     {
         it: 'non-array single line object assignment',
-        // prettier-ignore
         code: `
             const myVar = {a: 'here', b: 'there'};
         `,
     },
     {
         it: 'non-array multi-line object assignment',
-        // prettier-ignore
         code: `
             const myVar = {
                 a: 'here',
@@ -688,7 +644,6 @@ const javascriptTests: MultilineArrayTest[] = [
     // the following test caught that path.getValue() can return undefined.
     {
         it: 'array with an earlier function definition',
-        // prettier-ignore
         code: `
             function doStuff() {}
 
@@ -697,7 +652,6 @@ const javascriptTests: MultilineArrayTest[] = [
 
 
         `,
-        // prettier-ignore
         expect: `
             function doStuff() {}
 
@@ -712,11 +666,9 @@ const javascriptTests: MultilineArrayTest[] = [
     },
     {
         it: 'array with function definition inside of it',
-        // prettier-ignore
         code: `
             const what = ['a', function doStuff() {}];
         `,
-        // prettier-ignore
         expect: `
             const what = [
                 'a',

@@ -4,8 +4,20 @@ import {MultilineArrayTest, runTests} from './run-tests.mock.js';
 
 const jsonTests: MultilineArrayTest[] = [
     {
+        it: 'formats ending array correctly',
+        skip: true,
+        code: `
+            {
+                "files": [],
+                "references": [
+                    {"path": "./tsconfig.app.json"},
+                    {"path": "./tsconfig.node.json"}
+                ]
+            }
+        `,
+    },
+    {
         it: 'basic JSON format',
-        // prettier-ignore
         code: `
             {
                 "hello": "there",
@@ -164,9 +176,8 @@ const jsonTests: MultilineArrayTest[] = [
         `,
     },
     {
-        // TODO: this test is weird, it won't work if the newline before "example" isn't there
+        /** This test is weird, it won't work if the newline before "example" isn't there. */
         it: 'with object array element',
-        // prettier-ignore
         code: `
             {
                 "hello": "there",
@@ -194,7 +205,6 @@ const jsonTests: MultilineArrayTest[] = [
     },
     {
         it: 'with nested array',
-        // prettier-ignore
         code: `
             {
                 "hello": "there",
@@ -228,7 +238,6 @@ const jsonTests: MultilineArrayTest[] = [
     },
     {
         it: 'with multiple nested arrays',
-        // prettier-ignore
         code: `
             {
                 "hello": "there",
