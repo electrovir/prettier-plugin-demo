@@ -40,10 +40,14 @@ let forced = false;
 let allPassed = true;
 
 function removeIndent(input: string): string {
-    return input
-        .replace(/^\s*\n\s*/, '')
-        .replace(/\n {12}/g, '\n')
-        .replace(/\n\s+$/, '\n');
+    return (
+        input
+            .replace(/^\s*\n\s*/, '')
+            .replace(/\n {12}/g, '\n')
+            // this is only used for tests
+            // eslint-disable-next-line sonarjs/slow-regex
+            .replace(/\n\s+$/, '\n')
+    );
 }
 
 export function runTests(extension: string, tests: MultilineArrayTest[], parser: string) {

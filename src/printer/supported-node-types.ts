@@ -16,4 +16,3 @@ string[] => input)([
 export function isArrayLikeNode(node: Node): node is ArrayLikeNode {
     return arrayLikeNodeTypes.includes(node.type);
 }
-

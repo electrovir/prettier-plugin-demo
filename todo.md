@@ -1,1 +1,1 @@
-- make sure README link to prettier config is valid
+-   make sure README link to prettier config is valid

@@ -100,7 +100,7 @@ function setCommentTriggers(rootNode: Node, debug: boolean): CommentTriggers {
         starterTriggers,
     );
 
-    internalCommentTriggers.resets = internalCommentTriggers.resets.sort();
+    internalCommentTriggers.resets.sort();
 
     setResets(internalCommentTriggers);
 
@@ -135,11 +135,6 @@ function setResets(internalCommentTriggers: InternalCommentTriggers): void {
 
             currentLineNumberStats.lineEnd = endLineNumber;
         });
-    }
-    const setWrapThresholdLineNumbers = getObjectTypedKeys(
-        internalCommentTriggers.setWrapThresholds,
-    );
-    if (setWrapThresholdLineNumbers.length) {
     }
 }
 

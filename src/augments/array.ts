@@ -24,7 +24,8 @@ export function extractTextBetweenRanges(
     extractedText += '\n';
 
     for (let lineIndex = range.start.line + 1; lineIndex < range.end.line; lineIndex++) {
-        extractedText += input[lineIndex];
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        extractedText += input[lineIndex]!;
         extractedText += '\n';
     }
 

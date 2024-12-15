@@ -5,6 +5,7 @@ export function containsTrailingComma(
     nodeLocation: BaseNode['loc'],
     children: (BaseNode | null)[],
     originalLines: string[],
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     debug: boolean,
 ): boolean {
     const lastElement = children[children.length - 1];

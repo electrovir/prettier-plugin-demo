@@ -5,7 +5,6 @@ import {MultilineArrayTest, runTests} from './run-tests.mock.js';
 const jsonTests: MultilineArrayTest[] = [
     {
         it: 'formats ending array correctly',
-        skip: true,
         code: `
             {
                 "files": [],

@@ -1,3 +1,4 @@
+import type {AnyFunction} from '@augment-vir/common';
 import {Node} from 'estree';
 import {AstPath, ParserOptions, Printer} from 'prettier';
 import {MultilineArrayOptions, envDebugKey, fillInOptions} from '../options.js';
@@ -50,7 +51,7 @@ function wrapInOriginalPrinterCall<T extends string = string>(
                 printerProp = (printerProp as any)[subProperty];
             }
             try {
-                return (printerProp as Function | undefined)?.apply(thisParent, args);
+                return (printerProp as AnyFunction | undefined)?.apply(thisParent, args);
             } catch (error) {
                 const newError = new Error(
                     `Failed to wrap JS printer call for property "${property}" ${
@@ -84,8 +85,7 @@ const handleComments: Printer['handleComments'] = {
 /** This is a proxy because the original printer is only set at run time. */
 export const multilineArrayPrinter = new Proxy<Printer<Node>>({} as Printer<Node>, {
     get: (target, property: keyof Printer) => {
-        // the avoidAstMutation property is not defined in the types
-        // @ts-expect-error
+        // @ts-expect-error: the avoidAstMutation property is not defined in the types
         if (property === 'experimentalFeatures') {
             return {
                 avoidAstMutation: true,

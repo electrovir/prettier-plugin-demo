@@ -1,3 +1,4 @@
+import {stringify} from '@augment-vir/common';
 import {Doc, doc} from 'prettier';
 
 type NestedStringArray = (string | NestedStringArray)[];
@@ -9,16 +10,18 @@ const childProperties = [
     'parts',
 ] as const;
 
-export function stringifyDoc(input: Doc, recursive = false): NestedStringArray {
+export function stringifyDoc(input: Doc | null | undefined, recursive = false): NestedStringArray {
     if (typeof input === 'string' || !input) {
-        return [input];
+        return [stringify(input)];
     } else if (Array.isArray(input)) {
         return input.map((entry) => stringifyDoc(entry, recursive));
     } else if (recursive) {
         const children = childProperties.reduce((accum: NestedStringArray, currentProperty) => {
             if (currentProperty in input) {
-                accum.push(`${currentProperty}:`);
-                accum.push(stringifyDoc((input as any)[currentProperty], recursive));
+                accum.push(
+                    `${currentProperty}:`,
+                    stringifyDoc((input as any)[currentProperty], recursive),
+                );
             }
             return accum;
         }, []);

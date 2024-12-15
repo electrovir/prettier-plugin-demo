@@ -7,6 +7,12 @@ const baseConfig = defineConfig({
         'no-orphans': {
             from: [
                 'src/index.ts',
+                '.example.ts',
+            ],
+        },
+        'no-duplicate-dep-types': {
+            to: [
+                'prettier',
             ],
         },
     },

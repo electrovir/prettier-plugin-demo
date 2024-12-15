@@ -14,20 +14,13 @@ const commentTypes = [
 ] as const;
 
 function isMaybeComment(input: any): input is Comment {
-    if (!input || typeof input !== 'object') {
-        return false;
-    }
-    if (!('type' in input)) {
-        return false;
-    }
-    if (!commentTypes.includes(input.type)) {
-        return false;
-    }
-    if (!('value' in input)) {
-        return false;
-    }
-
-    return true;
+    return !(
+        !input ||
+        typeof input !== 'object' ||
+        !('type' in input) ||
+        !commentTypes.includes(input.type) ||
+        !('value' in input)
+    );
 }
 
 export function extractComments(node: any): Comment[] {

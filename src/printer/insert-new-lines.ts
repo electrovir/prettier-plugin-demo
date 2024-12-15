@@ -1,6 +1,6 @@
 import {getObjectTypedKeys, stringify, Values, type AnyObject} from '@augment-vir/common';
 import {AstPath, Doc, doc, ParserOptions} from 'prettier';
-import {isDocCommand, stringifyDoc} from '../augments/doc.js';
+import {isDocCommand} from '../augments/doc.js';
 import {MultilineArrayOptions} from '../options.js';
 import {walkDoc} from './child-docs.js';
 import {
@@ -30,10 +30,10 @@ function insertLinesIntoArray(
         if (typeof currentDoc === 'string' && currentDoc.trim() === '[') {
             const undoMutations: (() => void)[] = [];
 
-            let finalLineBreakExists = false;
+            let finalLineBreakExists = false as boolean;
 
             function undoAllMutations() {
-                undoMutations.reverse().forEach((undoMutation) => {
+                undoMutations.toReversed().forEach((undoMutation) => {
                     undoMutation();
                 });
             }
@@ -47,7 +47,7 @@ function insertLinesIntoArray(
 
             if (debug) {
                 console.info({currentDoc, parentDoc});
-                console.info(JSON.stringify(stringifyDoc(parentDoc, true), null, 4));
+                console.info(stringify(parentDoc));
             }
             if (childIndex !== 0) {
                 throw new Error(`${found} not at index 0 in its parent`);
@@ -70,7 +70,9 @@ function insertLinesIntoArray(
                 return false;
             }
             if (!isDocCommand(bracketSibling) || bracketSibling.type !== 'indent') {
-                throw new Error(`${found} its sibling was not an indent Doc.: ${bracketSibling}`);
+                throw new Error(
+                    `${found} its sibling was not an indent Doc.: ${stringify(bracketSibling)}`,
+                );
             }
             const indentContents = bracketSibling.contents;
             if (debug) {
@@ -81,7 +83,7 @@ function insertLinesIntoArray(
             }
             if (indentContents.length < 2) {
                 if (debug) {
-                    console.error(JSON.stringify(stringifyDoc(indentContents, true), null, 4));
+                    console.error(stringify(indentContents));
                 }
                 throw new Error(`${found} indent contents did not have at least 2 children`);
             }
@@ -149,7 +151,7 @@ function insertLinesIntoArray(
 
             let arrayChildCount = 0;
 
-            let forceFinalLineBreakExists = false;
+            let forceFinalLineBreakExists = false as boolean;
 
             if (!finalLineBreakExists) {
                 walkDoc(
@@ -215,7 +217,8 @@ function insertLinesIntoArray(
                                         closingSibling &&
                                         typeof closingSibling === 'object' &&
                                         !Array.isArray(closingSibling) &&
-                                        closingSibling.type === 'line'
+                                        closingSibling.type === 'line' &&
+                                        !closingSibling.soft
                                     ) {
                                         if (debug) {
                                             console.info(
@@ -402,9 +405,21 @@ function insertLinesIntoArray(
                 }
 
                 const closingBracketIndex: number = parentDoc.indexOf(']');
-                parentDoc.splice(closingBracketIndex, 0, doc.builders.hardlineWithoutBreakParent);
+                const preBracketChild = parentDoc[closingBracketIndex - 1];
+                if (isDocCommand(preBracketChild) && preBracketChild.type === 'line') {
+                    parentDoc.splice(closingBracketIndex - 1, 1);
+                    undoMutations.push(() => {
+                        parentDoc.splice(closingBracketIndex - 1, 0, preBracketChild);
+                    });
+                }
+
+                parentDoc.splice(
+                    closingBracketIndex - 1,
+                    0,
+                    doc.builders.hardlineWithoutBreakParent,
+                );
                 undoMutations.push(() => {
-                    parentDoc.splice(closingBracketIndex, 1);
+                    parentDoc.splice(closingBracketIndex - 1, 1);
                 });
             }
 
@@ -419,6 +434,7 @@ function insertLinesIntoArray(
                     ]),
                 );
                 undoMutations.push(() => {
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     indentContents[1] = oldIndentContentChild!;
                 });
             } else {
@@ -447,6 +463,10 @@ function insertLinesIntoArray(
         return true;
     });
 
+    if (debug) {
+        console.info('final doc:', stringify(inputDoc));
+    }
+
     // return what is input because we perform mutations on it
     return inputDoc;
 }
@@ -460,7 +480,9 @@ function getLatestSetValue<T extends object>(
         .reduce(
             (closestKey, currentKey): keyof T => {
                 if (Number(currentKey) < currentLine) {
-                    const currentData = triggers[currentKey];
+                    const currentData = triggers[currentKey] as
+                        | CommentTriggerWithEnding<T>[keyof T]
+                        | undefined;
 
                     if (currentData && currentData.lineEnd > currentLine) {
                         return currentKey;

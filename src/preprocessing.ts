@@ -1,3 +1,4 @@
+import {stringify} from '@augment-vir/common';
 import {Parser, ParserOptions, Plugin, Printer} from 'prettier';
 import {createWrappedMultiTargetProxy} from 'proxy-vir';
 import {SetOptional} from 'type-fest';
@@ -36,7 +37,9 @@ function addMultilinePrinter(options: ActualParserOptions): void {
         }
         const matchedPrinter = firstMatchedPlugin.printers?.[astFormat];
         if (!matchedPrinter) {
-            throw new Error(`Printer not found on matched plugin: ${firstMatchedPlugin}`);
+            throw new Error(
+                `Printer not found on matched plugin: ${stringify(firstMatchedPlugin)}`,
+            );
         }
         setOriginalPrinter(matchedPrinter);
         const thisPluginIndex = plugins.findIndex((plugin) => {
@@ -74,13 +77,14 @@ export function wrapParser(originalParser: Parser, parserName: string) {
         const pluginsWithRelevantParsers = findPluginsByParserName(parserName, pluginsFromOptions);
         pluginsWithRelevantParsers.forEach((plugin) => {
             const currentParser = plugin.parsers?.[parserName];
-            if (currentParser && 
-                    (plugin as {name?: string | undefined} | undefined)?.name?.includes(
-                        'prettier-plugin-sort-json',
-                    )
-                ) {
-                    parserProxy.proxyModifier.addOverrideTarget(currentParser);
-                }
+            if (
+                currentParser &&
+                (plugin as {name?: string | undefined} | undefined)?.name?.includes(
+                    'prettier-plugin-sort-json',
+                )
+            ) {
+                parserProxy.proxyModifier.addOverrideTarget(currentParser);
+            }
         });
 
         const pluginsWithPreprocessor = pluginsWithRelevantParsers.filter(

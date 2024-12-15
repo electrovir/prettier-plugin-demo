@@ -931,8 +931,20 @@ export const typescriptTests: MultilineArrayTest[] = [
         `,
     },
     {
-        it: 'does not add an extra new line when commas are turned off',
-        skip: true,
+        it: 'handles as const with trailing commas',
+        code: `
+            function derp() {
+                return [
+                    {
+                        operation: 'update',
+                        content: 'text',
+                    } as const,
+                ];
+            }
+        `,
+    },
+    {
+        it: 'handles as const without trailing commas',
         code: `
             function derp() {
                 return [
@@ -948,8 +960,34 @@ export const typescriptTests: MultilineArrayTest[] = [
         },
     },
     {
+        it: 'handles array ending with trailing commas',
+        code: `
+            const derp = {
+                files: [],
+                references: [
+                    {path: './tsconfig.app.json'},
+                    {path: './tsconfig.node.json'},
+                ],
+            };
+        `,
+    },
+    {
+        it: 'handles array ending without trailing commas',
+        code: `
+            const derp = {
+                files: [],
+                references: [
+                    {path: './tsconfig.app.json'},
+                    {path: './tsconfig.node.json'}
+                ]
+            };
+        `,
+        options: {
+            trailingComma: 'none',
+        },
+    },
+    {
         it: 'formats a map correctly without commas',
-        skip: true,
         code: `
             const array = [
                 1,

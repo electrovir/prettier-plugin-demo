@@ -9,8 +9,8 @@ import {
     StringSupportOption,
     SupportOption,
 } from 'prettier';
-import {parsers as tsParsers} from 'prettier/plugins/typescript';
 import {parsers as babelParsers} from 'prettier/plugins/babel';
+import {parsers as tsParsers} from 'prettier/plugins/typescript';
 import {MultilineArrayOptions, defaultMultilineArrayOptions, optionHelp} from './options.js';
 import {wrapParser} from './preprocessing.js';
 import {multilineArrayPrinter} from './printer/multiline-array-printer.js';
@@ -62,6 +62,7 @@ export const defaultOptions: Partial<RequiredOptions> & Required<MultilineArrayO
     defaultMultilineArrayOptions;
 
 /** Not actually exported: this is just for type checking purposes. */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const plugin: Plugin = {
     options,
     printers,
