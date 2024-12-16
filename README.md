@@ -20,7 +20,7 @@ export default {
 };
 ```
 
-The order of your plugins array is very important, so if you have other plugins and they don't work initially, try rearranging them. For an example, check out the plugin ordering for this package's Prettier config: [`./prettier.config.mjs`](https://github.com/electrovir/virmator/blob/5d6503bfc31bd44daee6fec1c6e8024e7bc93b84/base-configs/prettier.config.mjs)
+The order of your plugins array is very important, so if you have other plugins and they don't work initially, try rearranging them. For an example, check out the plugin ordering for this package's Prettier config: [`prettier.config.base.mjs`](https://github.com/electrovir/virmator/blob/dev/configs/prettier.config.base.mjs)
 
 ## Options
 
