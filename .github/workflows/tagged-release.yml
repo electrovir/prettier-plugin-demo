@@ -18,7 +18,10 @@ jobs:
 
         steps:
             - uses: actions/checkout@v4.1.7
-            - name: numeric version
-              uses: softprops/action-gh-release@v2.0.8
               with:
-                  make_latest: true
+                  fetch-depth: 0
+            - uses: actions/setup-node@v4.0.3
+              with:
+                  node-version-file: '.nvmrc'
+                  cache: 'npm'
+            - uses: electrovir/release-vir@dev
