@@ -35,6 +35,17 @@ export const typescriptTests: MultilineArrayTest[] = [
         },
     },
     {
+        it: 'works with type accessors',
+        code: `
+            export function doThing(
+                [
+                    data,
+                ]: Parameters<stuff['param']>,
+                thing: string,
+            ) {}
+        `,
+    },
+    {
         it: 'works even if filepath is undefined GitHub Issue #18 (thank you farmerpaul)',
         code: `
             const thingie = [

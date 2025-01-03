@@ -10,6 +10,7 @@ export function walkDoc(
     startDoc: Doc,
     /** Return something falsy to prevent walking of child docs */
     debug: boolean,
+    /** If this returns something falsy, none of the current node's children will be walked. */
     callback: (
         currentDoc: Doc,
         parents: Parents[],

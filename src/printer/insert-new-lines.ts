@@ -50,7 +50,15 @@ function insertLinesIntoArray(
                 console.info(stringify(parentDoc));
             }
             if (childIndex !== 0) {
-                throw new Error(`${found} not at index 0 in its parent`);
+                /**
+                 * This happens in some situations which we don't want to format in this plugin,
+                 * like in type accessors:
+                 *
+                 * ```typescript
+                 * type mockType = exampleObject['property'];
+                 * ```
+                 */
+                return true;
             }
 
             const maybeBreak = parentDoc[childIndex + 2];
